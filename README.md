@@ -5,11 +5,36 @@ Desafio direcionado pela Rocketseat no Ignite, criar uma aplicação de um e-com
 
 ### Requisitos
 
-Em breve...
+* components/Header/index.tsx
+- [X] Deve ser possível apresentar a quantidade de produtos adicionados ao carrinho
+
+* pages/Home/index.tsx
+- [X] Deve ser possível apresentar a quantidade de cada produto no carrinho
+- [X] Deve ser possível adicionar um produto ao carrinho
+
+* pages/Cart/index.tsx
+- [X] Deve ser possível aumentar/diminuir a quantidade de cada produto no carrinho
+- [X] Deve ser possível remover um produto do carrinho
+
+* hooks/useCart.tsx
+- [X] Deve ser possível inicializar o valor do carrinho com os dados guardados no localStorage
+- [X] Deve ser possível adicionar um produto ao carrinho
+- [X] Deve ser possível aumentar a quantidade de um produto já existente no carrinho ao adicionar o mesmo
+- [X] Deve ser possível remover um produto do carrinho
+- [X] Deve ser possível atualizar a quantidade de um produto no carrinho
 
 ### Regra de Negócio
 
-Em breve...
+* pages/Cart/index.tsx
+- [X] Não deve ser possível diminuir a quantidade de um produto quando a quantidade for 1 ou menor
+
+* hooks/useCart.tsx
+- [X] Não deve ser possível adicionar um produto inexistente ao carrinho
+- [X] Não deve ser possível adicionar mais produtos em que a quantidade adicionada não esteja disponível em estoque
+- [X] Não deve ser possível remover um produto inexistente no carrinho
+- [X] Não deve ser possível atualizar um produto inexistente no carrinho
+- [X] Não deve ser possível atualizar a quantidade de um produto em que a quantidade desejada não esteja disponível em estoque
+- [X] Não deve ser possível diminuir a quantidade de um produto quando a quantidade for menor que 1
 
 ---
 
