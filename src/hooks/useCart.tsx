@@ -1,3 +1,4 @@
+import { log } from 'console';
 import { createContext, ReactNode, useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 import { api } from '../services/api';
@@ -23,20 +24,44 @@ const CartContext = createContext<CartContextData>({} as CartContextData);
 
 export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const [cart, setCart] = useState<Product[]>(() => {
-    // const storagedCart = Buscar dados do localStorage
+    const storagedCart = localStorage.getItem('@RocketShoes:cart');
 
-    // if (storagedCart) {
-    //   return JSON.parse(storagedCart);
-    // }
+    if (storagedCart) {
+      return JSON.parse(storagedCart);
+    }
 
     return [];
   });
 
   const addProduct = async (productId: number) => {
     try {
-      // TODO
+      const newCart = [...cart];
+      const productAlreadyExists = newCart.find(product => product.id === productId);
+      const currentAmount = productAlreadyExists ? productAlreadyExists.amount : 0;
+      const amountToAdd = currentAmount + 1;
+
+      const hasStock = await checkProductStock({ productId, amount: amountToAdd });
+      if(!hasStock) {
+        toast.error('Quantidade solicitada fora de estoque');
+        return;
+      }
+
+      if (productAlreadyExists) {
+        productAlreadyExists.amount = amountToAdd;
+      } else {
+        const product = await api.get(`/products/${productId}`);
+        const newProduct = {
+          ...product.data,
+          amount: 1
+        }
+
+        newCart.push(newProduct);
+      }
+
+      setCart(newCart);
+      localStorage.setItem('@RocketShoes:cart', JSON.stringify(newCart));
     } catch {
-      // TODO
+      toast.error('Erro na adição do produto');
     }
   };
 
@@ -52,11 +77,23 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     productId,
     amount,
   }: UpdateProductAmount) => {
+    if(amount <= 0) return false;
     try {
       // TODO
     } catch {
       // TODO
     }
+  };
+
+  const checkProductStock = async ({productId, amount}: UpdateProductAmount) => {
+    const productStock = await api.get(`/stock/${productId}`);
+    const productStockAmount = productStock.data.amount;
+    
+    if(amount > productStockAmount) {
+      return false;
+    }
+
+    return true
   };
 
   return (
